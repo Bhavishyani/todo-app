@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To‑Do List</title>
+
+  <!-- Bootstrap 5 CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+  />
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- =====================================================================
+       Top header / hero
+  ====================================================================== -->
+  <header class="app-header">
+    <div class="container">
+      <div class="header-inner d-flex align-items-center gap-3">
+        <div class="header-icon">
+          <i class="bi bi-check2-all"></i>
+        </div>
+        <div>
+          <h1 class="mb-0">My Tasks</h1>
+          <p class="mb-0 header-sub">Stay organised, stay ahead</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       Main content
+  ====================================================================== -->
+  <main class="container py-4">
+
+    <!-- ── Add-task card ───────────────────────────────────────────────── -->
+    <div class="card add-card mb-4">
+      <div class="card-body">
+        <div class="input-group">
+          <span class="input-group-text add-icon">
+            <i class="bi bi-plus-lg"></i>
+          </span>
+          <input
+            id="newTaskInput"
+            type="text"
+            class="form-control add-input"
+            placeholder="Add a new task…"
+            maxlength="200"
+            autocomplete="off"
+          />
+          <button id="addTaskBtn" class="btn btn-primary btn-add">
+            Add
+          </button>
+        </div>
+        <!-- Inline validation message -->
+        <div id="inputError" class="input-error d-none">
+          <i class="bi bi-exclamation-circle me-1"></i>Please enter a task.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stats strip ─────────────────────────────────────────────────── -->
+    <div class="stats-strip d-flex align-items-center justify-content-between mb-3 px-1">
+      <span id="taskCount" class="stats-label">0 tasks</span>
+      <button id="clearCompletedBtn" class="btn btn-sm btn-outline-danger clear-btn d-none">
+        <i class="bi bi-trash me-1"></i>Clear completed
+      </button>
+    </div>
+
+    <!-- ── Filter tabs ─────────────────────────────────────────────────── -->
+    <ul class="nav filter-tabs mb-3" id="filterTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" data-filter="all">All</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-filter="active">Active</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-filter="completed">Completed</button>
+      </li>
+    </ul>
+
+    <!-- ── Task list ───────────────────────────────────────────────────── -->
+    <div id="taskList" class="task-list">
+      <!-- Tasks injected by script.js -->
+    </div>
+
+    <!-- ── Empty state ─────────────────────────────────────────────────── -->
+    <div id="emptyState" class="empty-state text-center d-none">
+      <i class="bi bi-clipboard2-check empty-icon"></i>
+      <p class="empty-title">Nothing here yet</p>
+      <p class="empty-sub">Add your first task above to get started.</p>
+    </div>
+
+    <!-- ── Loading spinner ─────────────────────────────────────────────── -->
+    <div id="loadingSpinner" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading…</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =====================================================================
+       Edit-task modal
+  ====================================================================== -->
+  <div
+    class="modal fade"
+    id="editModal"
+    tabindex="-1"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content edit-modal-content">
+        <div class="modal-header edit-modal-header">
+          <h5 class="modal-title" id="editModalLabel">
+            <i class="bi bi-pencil-square me-2"></i>Edit Task
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editTaskId" />
+          <div class="mb-0">
+            <label for="editTaskInput" class="form-label edit-label">Task title</label>
+            <input
+              id="editTaskInput"
+              type="text"
+              class="form-control edit-input"
+              placeholder="Update your task…"
+              maxlength="200"
+            />
+            <div id="editError" class="input-error d-none mt-2">
+              <i class="bi bi-exclamation-circle me-1"></i>Title cannot be empty.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer edit-modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >Cancel</button>
+          <button id="saveEditBtn" type="button" class="btn btn-primary">
+            <i class="bi bi-floppy me-1"></i>Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       Toast notification
+  ====================================================================== -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div
+      id="appToast"
+      class="toast align-items-center border-0"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Done!</div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- App logic -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

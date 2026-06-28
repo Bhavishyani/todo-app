@@ -1,0 +1,379 @@
+/*
+ * style.css  –  To‑Do List custom styles
+ * Blue & white theme built on top of Bootstrap 5
+ */
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+:root {
+  --blue-900: #0d2d6b;
+  --blue-700: #1a56db;
+  --blue-500: #3b82f6;
+  --blue-100: #dbeafe;
+  --blue-50:  #eff6ff;
+
+  --surface:  #ffffff;
+  --bg:       #f0f5ff;           /* Very light blue-tinted background */
+  --border:   #e2eaf8;
+  --muted:    #64748b;
+  --danger:   #ef4444;
+
+  --radius-card: 14px;
+  --radius-input: 10px;
+  --shadow-card: 0 2px 12px rgba(26, 86, 219, 0.10);
+  --shadow-hover: 0 6px 20px rgba(26, 86, 219, 0.16);
+  --transition: 0.2s ease;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.app-header {
+  background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);
+  padding: 2rem 0 2.5rem;
+  margin-bottom: -1.5rem;       /* Lets the card overlap slightly */
+  box-shadow: 0 4px 24px rgba(13, 45, 107, 0.25);
+}
+
+.header-inner { color: #fff; }
+
+.header-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.header-sub {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* ── Add-task card ───────────────────────────────────────────────────────── */
+.add-card {
+  border: none;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.add-icon {
+  background: var(--blue-50);
+  border: 1px solid var(--border);
+  border-right: none;
+  color: var(--blue-700);
+  font-size: 1.1rem;
+}
+
+.add-input {
+  border: 1px solid var(--border);
+  border-left: none;
+  border-right: none;
+  font-size: 0.97rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0 !important;
+}
+
+.add-input:focus {
+  box-shadow: none;
+  border-color: var(--blue-500);
+  background: var(--blue-50);
+}
+
+.btn-add {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  border-radius: 0 var(--radius-input) var(--radius-input) 0 !important;
+  padding: 0 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.btn-add:hover {
+  background: var(--blue-900);
+  border-color: var(--blue-900);
+  transform: translateY(-1px);
+}
+
+/* ── Validation error ───────────────────────────────────────────────────── */
+.input-error {
+  font-size: 0.82rem;
+  color: var(--danger);
+  margin-top: 0.5rem;
+}
+
+/* ── Stats strip ────────────────────────────────────────────────────────── */
+.stats-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.clear-btn {
+  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 0.25rem 0.85rem;
+}
+
+/* ── Filter tabs ────────────────────────────────────────────────────────── */
+.filter-tabs {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+  width: fit-content;
+}
+
+.filter-tabs .nav-link {
+  color: var(--muted);
+  border-radius: 7px;
+  padding: 0.3rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border: none;
+  transition: all var(--transition);
+}
+
+.filter-tabs .nav-link.active,
+.filter-tabs .nav-link:hover {
+  background: var(--blue-700);
+  color: #fff;
+}
+
+/* ── Task list ───────────────────────────────────────────────────────────── */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ── Task item ───────────────────────────────────────────────────────────── */
+.task-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition);
+  animation: slideIn 0.22s ease both;
+}
+
+.task-item:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Completed state */
+.task-item.completed {
+  background: var(--blue-50);
+  border-color: var(--blue-100);
+  opacity: 0.75;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+/* Slide-in animation */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom checkbox */
+.task-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--blue-500);
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.task-checkbox:checked {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+}
+
+.task-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* Task title */
+.task-title {
+  flex: 1;
+  font-size: 0.97rem;
+  font-weight: 500;
+  word-break: break-word;
+  transition: color var(--transition);
+}
+
+/* Action buttons */
+.task-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.task-item:hover .task-actions,
+.task-item:focus-within .task-actions {
+  opacity: 1;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  padding: 0;
+}
+
+.btn-edit {
+  color: var(--blue-700);
+}
+
+.btn-edit:hover {
+  background: var(--blue-50);
+  border-color: var(--blue-500);
+  color: var(--blue-900);
+}
+
+.btn-delete {
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background: #fff0f0;
+  border-color: var(--danger);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty-state {
+  padding: 3.5rem 1rem;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  color: var(--blue-100);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.empty-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ── Edit modal ──────────────────────────────────────────────────────────── */
+.edit-modal-content {
+  border-radius: var(--radius-card);
+  border: none;
+  overflow: hidden;
+}
+
+.edit-modal-header {
+  background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+  color: #fff;
+  padding: 1.1rem 1.4rem;
+  border: none;
+}
+
+.edit-modal-header .modal-title { font-weight: 600; }
+
+.edit-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.edit-input {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.97rem;
+}
+
+.edit-input:focus {
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.edit-modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1.4rem;
+}
+
+/* ── Toast ───────────────────────────────────────────────────────────────── */
+#appToast {
+  background: var(--blue-900);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  min-width: 220px;
+}
+
+#appToast.toast-success { background: #166534; }
+#appToast.toast-danger  { background: #991b1b; }
+
+/* ── Responsive tweaks ───────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .app-header { padding: 1.5rem 0 2rem; }
+  .task-actions { opacity: 1; }        /* Always visible on touch devices */
+  .btn-icon { width: 30px; height: 30px; font-size: 0.85rem; }
+}
